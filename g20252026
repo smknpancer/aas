@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asesmen Akhir Semester Ganjil 2025/2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .futuristic-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .futuristic-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .btn-futuristic {
+            background: linear-gradient(45deg, #00d4ff, #0099cc);
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-futuristic::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn-futuristic:hover::before {
+            left: 100%;
+        }
+        
+        .btn-futuristic:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4);
+        }
+        
+        .btn-disabled {
+            background: linear-gradient(45deg, #6b7280, #4b5563);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        .btn-disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-disabled::before {
+            display: none;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .countdown-text {
+            font-family: 'Courier New', monospace;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="h-full futuristic-bg text-white font-sans">
+    <div class="relative z-10 min-h-full flex flex-col">
+        <header class="text-center py-8 px-4">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-400">
+                Asesmen Akhir Semester Ganjil
+            </h1>
+            <h2 class="text-2xl md:text-3xl font-semibold text-cyan-200">
+                Tahun Ajaran 2025/2026
+            </h2>
+        </header>
+
+        <main class="flex-1 flex items-center justify-center px-4 py-8">
+            <div class="glass-card rounded-2xl p-8 max-w-2xl w-full">
+                <div class="text-center mb-8">
+                    <div class="countdown-text text-lg mb-4" id="countdown">
+                        Memuat status asesmen...
+                    </div>
+                    <div class="text-sm text-cyan-300" id="schedule-info">
+                        Jadwal: 5 Desember 2025, 08:00 - 09:00 WIB
+                    </div>
+                </div>
+
+                <div class="space-y-6">
+                    <div class="text-center">
+                        <button 
+                            id="btn-atph"
+                            class="btn-futuristic w-full py-4 px-8 rounded-xl text-lg font-semibold text-white transition-all duration-300 relative overflow-hidden"
+                            onclick="handleButtonClick('https://google.com', 'ATPH')"
+                        >
+                            <span class="relative z-10">
+                                📚 Pend. Agama Islam Kelas X ATPH
+                            </span>
+                        </button>
+                        <div class="text-xs text-cyan-300 mt-2" id="status-atph">
+                            Menunggu jadwal aktif
+                        </div>
+                    </div>
+
+                    <div class="text-center">
+                        <button 
+                            id="btn-dpb"
+                            class="btn-futuristic w-full py-4 px-8 rounded-xl text-lg font-semibold text-white transition-all duration-300 relative overflow-hidden"
+                            onclick="handleButtonClick('https://google.com', 'DPB')"
+                        >
+                            <span class="relative z-10">
+                                📚 Pend. Agama Islam Kelas X DPB
+                            </span>
+                        </button>
+                        <div class="text-xs text-cyan-300 mt-2" id="status-dpb">
+                            Menunggu jadwal aktif
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 text-center">
+                    <div class="text-sm text-gray-300">
+                        <div>Waktu Server: <span id="current-time" class="countdown-text text-cyan-400"></span></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="text-center py-6 px-4">
+            <div class="glass-card rounded-lg py-3 px-6 inline-block">
+                <p class="text-sm text-cyan-200">
+                    © SMK Negeri 1 Pante Ceureumen
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Konfigurasi waktu asesmen (WIB = UTC+7)
+        const ASSESSMENT_CONFIG = {
+            startDate: new Date('2025-12-05T08:00:00+07:00'),
+            endDate: new Date('2025-12-05T09:00:00+07:00')
+        };
+
+        function updateTime() {
+            const now = new Date();
+            const wibTime = new Date(now.getTime() + (7 * 60 * 60 * 1000)); // Convert to WIB
+            
+            document.getElementById('current-time').textContent = 
+                wibTime.toLocaleString('id-ID', {
+                    timeZone: 'Asia/Jakarta',
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit'
+                });
+        }
+
+        function checkAssessmentStatus() {
+            const now = new Date();
+            const btnAtph = document.getElementById('btn-atph');
+            const btnDpb = document.getElementById('btn-dpb');
+            const statusAtph = document.getElementById('status-atph');
+            const statusDpb = document.getElementById('status-dpb');
+            const countdown = document.getElementById('countdown');
+
+            if (now >= ASSESSMENT_CONFIG.startDate && now <= ASSESSMENT_CONFIG.endDate) {
+                // Asesmen sedang berlangsung
+                btnAtph.classList.remove('btn-disabled');
+                btnDpb.classList.remove('btn-disabled');
+                btnAtph.classList.add('pulse-animation');
+                btnDpb.classList.add('pulse-animation');
+                
+                statusAtph.textContent = '🟢 AKTIF - Klik untuk mengakses';
+                statusDpb.textContent = '🟢 AKTIF - Klik untuk mengakses';
+                
+                const timeLeft = ASSESSMENT_CONFIG.endDate - now;
+                const minutes = Math.floor(timeLeft / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+                
+                countdown.innerHTML = `
+                    <div class="text-green-400 font-bold">
+                        ⏰ ASESMEN SEDANG BERLANGSUNG
+                    </div>
+                    <div class="text-sm mt-2">
+                        Sisa waktu: ${minutes}m ${seconds}s
+                    </div>
+                `;
+                
+            } else if (now < ASSESSMENT_CONFIG.startDate) {
+                // Belum dimulai
+                btnAtph.classList.add('btn-disabled');
+                btnDpb.classList.add('btn-disabled');
+                btnAtph.classList.remove('pulse-animation');
+                btnDpb.classList.remove('pulse-animation');
+                
+                statusAtph.textContent = '⏳ Menunggu jadwal aktif';
+                statusDpb.textContent = '⏳ Menunggu jadwal aktif';
+                
+                const timeUntilStart = ASSESSMENT_CONFIG.startDate - now;
+                const days = Math.floor(timeUntilStart / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeUntilStart % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeUntilStart % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeUntilStart % (1000 * 60)) / 1000);
+                
+                countdown.innerHTML = `
+                    <div class="text-yellow-400 font-bold">
+                        ⏰ ASESMEN BELUM DIMULAI
+                    </div>
+                    <div class="text-sm mt-2">
+                        Dimulai dalam: ${days}h ${hours}j ${minutes}m ${seconds}s
+                    </div>
+                `;
+                
+            } else {
+                // Sudah berakhir
+                btnAtph.classList.add('btn-disabled');
+                btnDpb.classList.add('btn-disabled');
+                btnAtph.classList.remove('pulse-animation');
+                btnDpb.classList.remove('pulse-animation');
+                
+                statusAtph.textContent = '🔴 Asesmen telah berakhir';
+                statusDpb.textContent = '🔴 Asesmen telah berakhir';
+                
+                countdown.innerHTML = `
+                    <div class="text-red-400 font-bold">
+                        ⏰ ASESMEN TELAH BERAKHIR
+                    </div>
+                    <div class="text-sm mt-2">
+                        Berakhir pada: 5 Desember 2025, 09:00 WIB
+                    </div>
+                `;
+            }
+        }
+
+        function handleButtonClick(url, className) {
+            const now = new Date();
+            
+            if (now >= ASSESSMENT_CONFIG.startDate && now <= ASSESSMENT_CONFIG.endDate) {
+                // Buka link di tab baru jika asesmen aktif
+                window.open(url, '_blank', 'noopener,noreferrer');
+            } else {
+                // Tampilkan pesan jika tidak aktif
+                const message = now < ASSESSMENT_CONFIG.startDate ? 
+                    'Asesmen belum dimulai. Silakan tunggu hingga 5 Desember 2025 pukul 08:00 WIB.' :
+                    'Asesmen telah berakhir pada 5 Desember 2025 pukul 09:00 WIB.';
+                
+                // Buat notifikasi inline
+                showNotification(message);
+            }
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 max-w-sm';
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <span class="mr-2">⚠️</span>
+                    <span class="text-sm">${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+
+        // Update setiap detik
+        setInterval(() => {
+            updateTime();
+            checkAssessmentStatus();
+        }, 1000);
+
+        // Inisialisasi
+        updateTime();
+        checkAssessmentStatus();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'99150133e00bfd29',t:'MTc2MDkyNjQ5OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
